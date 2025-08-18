@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Scanner</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+</head>
+<body>
+    <h2>Upload Image to Detect Product</h2>
+    <input type="file" id="imageInput" accept="image/*"><br><br>
+    <canvas id="canvas"></canvas>
+    <div>
+        <input type="text" id="modelNo" placeholder="Enter Model No">
+        <input type="number" id="units" placeholder="Units">
+        <button onclick="addProduct()">Add to Inventory</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

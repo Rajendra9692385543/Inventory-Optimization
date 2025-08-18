@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2>Current Inventory</h2>
+    <table border="1">
+        <thead>
+            <tr><th>Model No</th><th>Units</th></tr>
+        </thead>
+        <tbody id="inventoryTable"></tbody>
+    </table>
+
+    <script>
+        async function loadInventory() {
+            const res = await fetch('/inventory');
+            const data = await res.json();
+            const table = document.getElementById('inventoryTable');
+            table.innerHTML = '';
+            data.forEach(item => {
+                const row = `<tr><td>${item.model_no}</td><td>${item.units}</td></tr>`;
+                table.innerHTML += row;
+            });
+        }
+        loadInventory();
+    </script>
+</body>
+</html>
