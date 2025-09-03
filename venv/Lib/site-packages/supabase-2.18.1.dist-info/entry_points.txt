@@ -1,0 +1,4 @@
+[console_scripts]
+build_sync = cli_scripts:build_sync
+tests = cli_scripts:run_tests
+
