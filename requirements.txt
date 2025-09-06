@@ -1,0 +1,7 @@
+ultralytics
+torch
+torchvision
+pillow
+faiss-cpu
+numpy
+matplotlib

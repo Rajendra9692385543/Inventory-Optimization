@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+.env
+
+# Model files
+*.pt
+*.onnx
+
+# Data files
+*.db
+embeddings/index.faiss
+
+# IDE
+.vscode/
