@@ -147,6 +147,94 @@ def get_product(hsn):
     # If no product found, return 404 error with message
     return jsonify({"error": "Product not found"}), 404
 
+# Route for Add Purchase Page
+@app.route("/add-purchase", methods=["GET", "POST"])
+def add_purchase():
+    # Get last invoice number
+    last_invoice_resp = supabase.table("purchase_book").select("invoice_no").order("id", desc=True).limit(1).execute()
+    next_invoice = 1
+    if last_invoice_resp.data:
+        try:
+            last_invoice_no = last_invoice_resp.data[0].get("invoice_no", "0")
+            next_invoice = int(last_invoice_no) + 1
+        except ValueError:
+            next_invoice = 1
+
+    if request.method == "POST":
+        date = request.form.get("date")
+        invoice_no = request.form.get("invoice_no")
+        hsn = request.form.get("hsn")
+        name = request.form.get("name")
+        qty = request.form.get("qty")
+        basic = request.form.get("basic")
+        sgst = request.form.get("sgst")
+        cgst = request.form.get("cgst")
+        igst = request.form.get("igst")
+        round_off = request.form.get("round_off")
+        total = request.form.get("total")
+
+        # Validate required fields
+        if not all([date, invoice_no, hsn, name, qty, basic, total]):
+            flash("All required fields must be filled.", "danger")
+            return render_template("add_purchase.html", next_invoice=next_invoice)
+
+        try:
+            qty = float(qty)
+            basic = float(basic)
+            sgst = float(sgst or 0)
+            cgst = float(cgst or 0)
+            igst = float(igst or 0)
+            round_off = float(round_off or 0)
+            total = float(total)
+        except ValueError:
+            flash("Quantity, amounts, and taxes must be numeric.", "danger")
+            return render_template("add_purchase.html", next_invoice=next_invoice)
+
+        # Insert into purchase_book
+        response = supabase.table("purchase_book").insert({
+            "date": date,
+            "invoice_no": invoice_no,
+            "hsn": hsn,
+            "name": name,
+            "qty": qty,
+            "basic": basic,
+            "sgst": sgst,
+            "cgst": cgst,
+            "igst": igst,
+            "round_off": round_off,
+            "total": total
+        }).execute()
+
+        if response.data:
+            flash("Purchase added successfully!", "success")
+            return redirect(url_for("purchase_book"))  # Replace with your listing route
+        else:
+            flash("Failed to add purchase.", "danger")
+
+    return render_template("add_purchase.html", next_invoice=next_invoice)
+
+
+# API to fetch shop names for suggestions
+@app.route("/get-shop-names")
+def get_shop_names():
+    resp = supabase.table("purchase_book").select("name").execute()
+    names = list({row["name"] for row in resp.data if row.get("name")})
+    return jsonify(names)
+
+
+# API to fetch product details by HSN
+@app.route("/get-purchase-product/<hsn>")
+def get_purchase_product(hsn):
+    product_resp = supabase.table("stock_items").select("*").eq("hsn", hsn).execute()
+    if product_resp.data:
+        product = product_resp.data[0]
+        return jsonify({
+            "item": product.get("item", ""),
+            "hsn": product.get("hsn", ""),
+            "price": product.get("price", 0)
+        })
+    return jsonify({"error": "Product not found"}), 404
+
 # Optional: API route to fetch all HSNs for autocomplete
 @app.route("/get-all-hsn")
 def get_all_hsn():
@@ -154,10 +242,6 @@ def get_all_hsn():
     if response.data:
         return jsonify(response.data)  # [{"hsn": "2523"}, {"hsn": "2524"}, ...]
     return jsonify([])  # empty list if no data
-
-@app.route("/add-purchase")
-def add_purchase():
-    return render_template("add_purchase.html")
 
 @app.route("/add-item")
 def add_item():
