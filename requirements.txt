@@ -1,3 +1,14 @@
-flask
-gunicorn
+streamlit
+pandas
+numpy
+# tensorflow-cpu 2.15.0 was not available for the current Python/platform. Use a newer available build.
+tensorflow-cpu==2.20.0
+scikit-learn
+plotly
+torch
+torchvision
+ultralytics
+faiss-cpu
+Pillow
 supabase
+python-dateutil
