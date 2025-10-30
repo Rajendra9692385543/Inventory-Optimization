@@ -3,7 +3,6 @@ from supabase import create_client, Client
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Change this in production
-
 # Supabase config
 SUPABASE_URL = "https://hatdisgzirzmunerdnnu.supabase.co"
 SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhdGRpc2d6aXJ6bXVuZXJkbm51Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTE2NzczNCwiZXhwIjoyMDcwNzQzNzM0fQ.ZBqV9FNWBh_CyUpJid9JFEV2nmstmD06NKM4Lx6JZsA"
